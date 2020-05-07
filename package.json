@@ -11,8 +11,7 @@
     "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
-    "stripe": "^8.49.0"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

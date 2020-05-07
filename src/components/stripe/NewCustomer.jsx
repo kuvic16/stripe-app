@@ -11,6 +11,11 @@ import {
   IbanElement,
 } from "@stripe/react-stripe-js";
 
+// const stripe_publishable_key = "pk_test_l6ueGUx2yZIkGQJoiuQA1DCr00a4G1rhvh";
+// const stripe_secret_key = "sk_test_dSbbUbTkgEOKpUlIlKxAHCgx00Latf5dEy";
+const stripe_publishable_key = "pk_test_v2RvAX0J2YMw10VW9Sqv2LQA";
+const stripe_secret_key = "sk_test_NO96YUmh9VfjgekrHx1YtpgR";
+
 //class NewCustomer extends Component {
 const NewCustomer = () => {
   const CARD_ELEMENT_OPTIONS = {
@@ -58,6 +63,7 @@ const NewCustomer = () => {
   };
 
   const CheckoutForm = () => {
+    const [message, setMessage] = useState(null);
     const [error, setError] = useState(null);
     const [ibanerror, ibansetError] = useState(null);
     const stripe = useStripe();
@@ -93,7 +99,7 @@ const NewCustomer = () => {
     // Handle form submission.
     const handleSubmit = async (event) => {
       event.preventDefault();
-
+      setMessage("");
       const card = elements.getElement(CardElement);
       const cardToken = await stripe.createToken(card);
       console.log(cardToken);
@@ -111,12 +117,11 @@ const NewCustomer = () => {
 
       if (cardToken.error && ibanResult.error) {
         return;
+      } else if (cardToken.error) {
+        card.clear();
+      } else if (ibanResult.error) {
+        ibanElement.clear();
       }
-
-      // const cardResult = await stripe.createPaymentMethod({
-      //   type: "card",
-      //   card: card,
-      // });
 
       let request = {
         name: name,
@@ -140,26 +145,19 @@ const NewCustomer = () => {
         data: qs.stringify(request),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: "Bearer sk_test_dSbbUbTkgEOKpUlIlKxAHCgx00Latf5dEy",
+          Authorization: "Bearer " + stripe_secret_key,
         },
       })
         .then(function (response) {
           if (cardToken.token && cardToken.token.id) {
             createCustomerSource(response.data.id, cardToken.token.id);
           }
+          setMessage("Customer info saved successfully!");
+          clearInputs();
         })
         .catch(function (response) {
           console.log(response);
         });
-
-      // if (result.error) {
-      //   // Inform the user if there was an error.
-      //   setError(result.error.message);
-      // } else {
-      //   setError(null);
-      //   // Send the token to your server.
-      //   //stripeTokenHandler(result.token);
-      // }
     };
 
     const createCustomerSource = (customer_id, token_id) => {
@@ -173,7 +171,7 @@ const NewCustomer = () => {
         }),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: "Bearer sk_test_dSbbUbTkgEOKpUlIlKxAHCgx00Latf5dEy",
+          Authorization: "Bearer " + stripe_secret_key,
         },
       })
         .then(function (response) {
@@ -182,6 +180,18 @@ const NewCustomer = () => {
         .catch(function (response) {
           console.log(response);
         });
+    };
+
+    const clearInputs = () => {
+      setName("");
+      setEmail("");
+      setAddress("");
+      setCity("");
+      setState("");
+      setPostalCode("");
+      setCountry("");
+      elements.getElement(CardElement).clear();
+      elements.getElement(IbanElement).clear();
     };
 
     return (
@@ -341,15 +351,16 @@ const NewCustomer = () => {
             <button className="submit-btn" type="submit">
               Save
             </button>
+            <div className="info" role="info">
+              {message}
+            </div>
           </div>
         </div>
       </form>
     );
   };
 
-  const stripePromise = loadStripe(
-    "pk_test_l6ueGUx2yZIkGQJoiuQA1DCr00a4G1rhvh"
-  );
+  const stripePromise = loadStripe(stripe_publishable_key);
 
   return (
     <Elements stripe={stripePromise}>
