@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import qs from "qs";
 import "../../App.css";
 import axios from "axios";
@@ -63,7 +63,6 @@ const NewCustomer = () => {
     const stripe = useStripe();
     const elements = useElements();
     const [isLoading, setIsLoading] = useState(false);
-    const [paymentMethod, setPaymentMethod] = useState(null);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [bankName, setBankName] = useState("");
@@ -94,6 +93,7 @@ const NewCustomer = () => {
     // Handle form submission.
     const handleSubmit = async (event) => {
       event.preventDefault();
+
       const card = elements.getElement(CardElement);
       const cardToken = await stripe.createToken(card);
       console.log(cardToken);
@@ -185,12 +185,12 @@ const NewCustomer = () => {
     };
 
     return (
-      <form class="new-customer-form" onSubmit={handleSubmit}>
-        <div class="form-header">Customer Information</div>
+      <form className="new-customer-form" onSubmit={handleSubmit}>
+        <div className="form-header">Customer Information</div>
         <div className="form-body">
-          <div class="form-row inline">
-            <div class="col">
-              <label for="name">Name</label>
+          <div className="form-row inline">
+            <div className="col">
+              <label htmlFor="name">Name</label>
               <input
                 id="name"
                 name="name"
@@ -202,8 +202,8 @@ const NewCustomer = () => {
                 }}
               />
             </div>
-            <div class="col">
-              <label for="email">Email</label>
+            <div className="col">
+              <label htmlFor="email">Email</label>
               <input
                 id="email"
                 name="name"
@@ -217,11 +217,11 @@ const NewCustomer = () => {
               />
             </div>
           </div>
-          <div class="form-row">
-            <label for="address">Address</label>
+          <div className="form-row">
+            <label htmlFor="address">Address</label>
             <input
               name="address"
-              class="field"
+              className="field"
               placeholder="185 Berry Street Suite 550"
               required
               value={address}
@@ -230,12 +230,12 @@ const NewCustomer = () => {
               }}
             />
           </div>
-          <div class="form-row inline">
-            <div class="col">
-              <label for="city">City</label>
+          <div className="form-row inline">
+            <div className="col">
+              <label htmlFor="city">City</label>
               <input
                 name="city"
-                class="field"
+                className="field"
                 placeholder="San Francisco"
                 required
                 value={city}
@@ -244,11 +244,11 @@ const NewCustomer = () => {
                 }}
               />
             </div>
-            <div class="col">
-              <label for="state">State</label>
+            <div className="col">
+              <label htmlFor="state">State</label>
               <input
                 name="state"
-                class="field"
+                className="field"
                 placeholder="CA"
                 required
                 value={state}
@@ -258,12 +258,12 @@ const NewCustomer = () => {
               />
             </div>
           </div>
-          <div class="form-row inline">
-            <div class="col">
-              <label for="postal_code">Postal Code</label>
+          <div className="form-row inline">
+            <div className="col">
+              <label htmlFor="postal_code">Postal Code</label>
               <input
                 name="postal_code"
-                class="field"
+                className="field"
                 placeholder="94107"
                 required
                 value={postalCode}
@@ -272,8 +272,8 @@ const NewCustomer = () => {
                 }}
               ></input>
             </div>
-            <div class="col">
-              <label for="country">Country</label>
+            <div className="col">
+              <label htmlFor="country">Country</label>
               <select
                 name="country"
                 required
@@ -308,14 +308,12 @@ const NewCustomer = () => {
                 <option value="SE">Sweden</option>
                 <option value="CH">Switzerland</option>
                 <option value="GB">United Kingdom</option>
-                <option value="US" selected="selected">
-                  United States
-                </option>
+                <option value="US">United States</option>
               </select>
             </div>
           </div>
-          <div class="form-row">
-            <label for="card-element">Credit or debit card</label>
+          <div className="form-row">
+            <label htmlFor="card-element">Credit or debit card</label>
             <CardElement
               id="card-element"
               options={CARD_ELEMENT_OPTIONS}
@@ -326,7 +324,7 @@ const NewCustomer = () => {
             </div>
           </div>
           <div className="form-row">
-            <label for="iban-element">IBAN</label>
+            <label htmlFor="iban-element">IBAN</label>
             <IbanElement
               id="iban-element"
               options={IBAN_ELEMENT_OPTIONS}
@@ -340,7 +338,7 @@ const NewCustomer = () => {
             {bankName}
           </div>
           <div className="form-row text-align-center">
-            <button class="submit-btn" type="submit">
+            <button className="submit-btn" type="submit">
               Save
             </button>
           </div>
@@ -358,18 +356,6 @@ const NewCustomer = () => {
       <CheckoutForm />
     </Elements>
   );
-
-  async function stripeTokenHandler(token) {
-    const response = await fetch("/charge", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: token.id }),
-    });
-
-    return response.json();
-  }
 };
 
 export default NewCustomer;
