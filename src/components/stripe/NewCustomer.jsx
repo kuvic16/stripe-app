@@ -11,10 +11,8 @@ import {
   IbanElement,
 } from "@stripe/react-stripe-js";
 
-// const stripe_publishable_key = "pk_test_l6ueGUx2yZIkGQJoiuQA1DCr00a4G1rhvh";
-// const stripe_secret_key = "sk_test_dSbbUbTkgEOKpUlIlKxAHCgx00Latf5dEy";
-const stripe_publishable_key = "pk_test_v2RvAX0J2YMw10VW9Sqv2LQA";
-const stripe_secret_key = "sk_test_NO96YUmh9VfjgekrHx1YtpgR";
+const stripe_publishable_key = "pk_test_l6ueGUx2yZIkGQJoiuQA1DCr00a4G1rhvh";
+const stripe_secret_key = "sk_test_dSbbUbTkgEOKpUlIlKxAHCgx00Latf5dEy";
 
 //class NewCustomer extends Component {
 const NewCustomer = () => {
